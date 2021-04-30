@@ -6,12 +6,12 @@
 class Page : public Interface
 {
 public:
-  Page(std::string title, Interface *parent, int *value);
+  Page(std::string title, int *value);
   void triggerAction(std::string action);
+  Interface *parent;
 
 private:
   int *value;
-  Interface *parent;
 };
 
 class PageFactory : Factory
