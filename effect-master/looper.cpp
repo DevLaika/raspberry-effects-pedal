@@ -7,12 +7,12 @@ void Looper::triggerAction(std::string action)
 {
   if (action == "startstop")
   {
-    if (isRecording) // End of recording
+    if (isRecording != 0) // End of recording
     {
       length = counter; // Set length of recording to current counter
     }
-    counter = 0;                // Play/recoded head back to beginning
-    isRecording = !isRecording; // Toggle whether or not it is recording
+    counter = 0;                                   // Play/recoded head back to beginning
+    isRecording = ((isRecording + 1) % 128) * 127; // Toggle whether or not it is recording
     return;
   }
   std::cout << "[WARNING] \"" << action << "\" is not a valid action for \"looper\"!" << std::endl;
@@ -54,4 +54,15 @@ Looper *LooperFactory::create(std::string config, std::string address)
   registerEffect(address, looper);
   return looper;
 };
+
+int *Looper::getPointerTo(std::string target)
+{
+  if (target == "isRecording")
+  {
+    return &isRecording;
+  }
+  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for looper!" << std::endl;
+  abort();
+}
+
 static LooperFactory global_LooperFactory;

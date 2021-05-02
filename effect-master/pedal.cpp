@@ -57,8 +57,13 @@ Pedal *PedalFactory::create(std::string config, std::string address)
     i++;
     it++;
   }
+
+  std::string interface_config = pedalconfig::get_body_by_head(config, "interface");
+
+  Interface *interface = (Interface *)Factory::create(interface_config, address + ".interface.");
+
   // if need size of buttons[] plz add size to constructor <3
-  Pedal *pedal = new Pedal(effect, buttons);
+  Pedal *pedal = new Pedal(effect, buttons, interface);
   registerEffect(address, pedal);
   return pedal;
 };

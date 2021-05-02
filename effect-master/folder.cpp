@@ -43,7 +43,6 @@ FolderFactory::FolderFactory()
 }
 Folder *FolderFactory::create(std::string config, std::string address)
 {
-
   std::regex title_regex("(^|\\n)title(\n( {2})+\\S+)*");
   std::smatch title_match;
   std::regex_search(config, title_match, title_regex);
@@ -75,12 +74,11 @@ Folder *FolderFactory::create(std::string config, std::string address)
 
   Interface *interfaces[MAX_INTERFACES];
   int interfaces_amount = 0;
-  while (it != end || interfaces_amount < MAX_INTERFACES)
+  while (it != end && interfaces_amount < MAX_INTERFACES)
   {
     std::string interface_config = it->str();
-
     interface_config = std::regex_replace(interface_config, replace_begin_regex, "");
-    std::cout << interface_config << std::endl;
+    // std::cout << interface_config << std::endl;
     interfaces[interfaces_amount] = (Interface *)Factory::create(interface_config, address + ".interfaces[" + std::to_string(interfaces_amount) + "].");
     interfaces_amount++;
     it++;
@@ -88,7 +86,9 @@ Folder *FolderFactory::create(std::string config, std::string address)
   Folder *folder = new Folder(title_config, interfaces, interfaces_amount);
   for (int i = 0; i < interfaces_amount; i++)
   {
-    interfaces[interfaces_amount]->parent = folder;
+    interfaces[i]->parent = folder;
   }
   return folder;
 }
+
+static FolderFactory global_FolderFactory;

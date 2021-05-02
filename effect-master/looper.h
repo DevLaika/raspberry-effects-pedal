@@ -8,10 +8,11 @@
 class Looper : public Effect
 {
 public:
-  bool isRecording = true;
+  int isRecording = 127;
   Looper();
   int eval(int input_signal);
   void triggerAction(std::string action);
+  int *getPointerTo(std::string value);
 
 private:
   int buffer[MAX_RECORD_LENGTH];

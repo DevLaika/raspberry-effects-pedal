@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <regex>
+#include "util.h"
 
 #define LEVEL_MIN 0
 #define LEVEL_MID 2047

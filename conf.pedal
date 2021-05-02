@@ -28,7 +28,7 @@ pedal
       interfaces
         page
           title
-            looper recording
+            looperrecording
           value
             pedal.effect.chain.effects[0].looper
               isRecording
@@ -41,10 +41,4 @@ pedal
                 lowpass
               value
                 pedal.effect.chain.effects[1].lowpass
-                  smoothing_value
-            page
-              title
-                highpass
-              value
-                pedal.effect.chain.effects[2].highpass
                   smoothing_value
