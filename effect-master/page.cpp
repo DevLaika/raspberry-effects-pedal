@@ -4,8 +4,12 @@ Page::Page(std::string _title, int *_value)
 {
   title = _title;
   value = _value;
+  parent = this;
 }
-
+std::string Page::getDisplay()
+{
+  return title + "\n" + std::to_string(*value);
+}
 void Page::triggerAction(std::string action)
 {
   if (action == "add")

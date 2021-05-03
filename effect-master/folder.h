@@ -9,8 +9,9 @@ class Folder : public Interface
 {
 public:
   Folder(std::string title, Interface *interfaces[], int size);
-  Interface *interfaces[MAX_INTERFACES];
   void triggerAction(std::string action);
+  std::string getDisplay();
+  Interface *interfaces[MAX_INTERFACES];
   Interface *parent;
 
 private:

@@ -16,6 +16,15 @@ int Delay::eval(int input_signal)
   }
   return input_signal;
 };
+int *Delay::getPointerTo(std::string target)
+{
+  if (target == "delay_depth")
+  {
+    return &delay_depth;
+  }
+  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Delay\"!" << std::endl;
+  abort();
+}
 
 DelayFactory::DelayFactory()
 {
@@ -23,7 +32,8 @@ DelayFactory::DelayFactory()
 };
 Delay *DelayFactory::create(std::string config, std::string address)
 {
-  Delay *delay = new Delay(std::stoi(config));
+  std::string delay_depth_config = pedalconfig::get_body_by_head(config, "delay_depth");
+  Delay *delay = new Delay(std::stoi(delay_depth_config));
   registerEffect(address, delay);
   return delay;
 };

@@ -1,6 +1,6 @@
 #include "lowpass.h"
 
-LowPass::LowPass(int _smoothing_value)
+Lowpass::Lowpass(int _smoothing_value)
 {
   smoothing_value = _smoothing_value;
 }
@@ -16,7 +16,7 @@ LowPass::LowPass(int _smoothing_value)
   y[n] = y[n-1] - smoothing_value/MAX_INPUT_VALUE * (y[n-1]-x[n])
 
  */
-int LowPass::eval(int input_signal)
+int Lowpass::eval(int input_signal)
 {
   if (enabled)
   {
@@ -25,39 +25,26 @@ int LowPass::eval(int input_signal)
   previous_input_signal = input_signal;
   return input_signal;
 };
-int *LowPass::getPointerTo(std::string target)
+int *Lowpass::getPointerTo(std::string target)
 {
   if (target == "smoothing_value")
   {
     return &smoothing_value;
   }
-  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for lowpass!" << std::endl;
+  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Lowpass\"!" << std::endl;
   abort();
 };
 
-LowPassFactory::LowPassFactory()
+LowpassFactory::LowpassFactory()
 {
   registerFactory("lowpass", this);
 };
-LowPass *LowPassFactory::create(std::string config, std::string address)
+Lowpass *LowpassFactory::create(std::string config, std::string address)
 {
-  std::regex smoothing_value_regex("(^|\\n)smoothing_value(\n( {2})+\\S+)*");
-  std::smatch smoothing_value_match;
-  std::regex_search(config, smoothing_value_match, smoothing_value_regex);
-  std::string smoothing_value_config = smoothing_value_match.str();
+  std::string smoothing_value_config = pedalconfig::get_body_by_head(config, "smoothing_value");
 
-  std::regex replace_begin_regex("^\\n");
-  smoothing_value_config = std::regex_replace(smoothing_value_config, replace_begin_regex, "");
-
-  std::regex replace_name_regex("^\\S+\\n?");
-  std::regex replace_spaces_regex("(^|\\n) {2}");
-  // std::regex replace_begin_regex("^\\n"); IS ALREDY DEFINED
-  smoothing_value_config = std::regex_replace(smoothing_value_config, replace_name_regex, "");
-  smoothing_value_config = std::regex_replace(smoothing_value_config, replace_spaces_regex, "\n");
-  smoothing_value_config = std::regex_replace(smoothing_value_config, replace_begin_regex, "");
-
-  LowPass *lowpass = new LowPass(std::stoi(smoothing_value_config));
+  Lowpass *lowpass = new Lowpass(std::stoi(smoothing_value_config));
   registerEffect(address, lowpass);
   return lowpass;
 };
-static LowPassFactory global_LowPassFactory;
+static LowpassFactory global_LowPassFactory;

@@ -30,39 +30,16 @@ ChainFactory::ChainFactory()
 };
 Chain *ChainFactory::create(std::string config, std::string address)
 {
-  std::regex effects_regex("(^|\\n)effects(\n( {2})+\\S+)*");
-  std::smatch effects_match;
-  std::regex_search(config, effects_match, effects_regex);
-  std::string effects_config = effects_match.str();
+  std::string effects_config = pedalconfig::get_body_by_head(config, "effects");
 
-  std::regex replace_begin_regex("^\\n");
-  effects_config = std::regex_replace(effects_config, replace_begin_regex, "");
-
-  std::regex replace_name_regex("^\\S+\\n?");
-  std::regex replace_spaces_regex("(^|\\n) {2}");
-  // std::regex replace_begin_regex("^\\n"); IS ALREDY DEFINED
-  effects_config = std::regex_replace(effects_config, replace_name_regex, "");
-  effects_config = std::regex_replace(effects_config, replace_spaces_regex, "\n");
-  effects_config = std::regex_replace(effects_config, replace_begin_regex, "");
-
-  std::regex effect_regex("(^|\\n)\\S+(\n( {2})+\\S+)*");
-  std::sregex_iterator it(effects_config.begin(), effects_config.end(), effect_regex);
-  std::sregex_iterator end;
-
+  std::vector<std::string> effect_configs_vector = pedalconfig::get_vector_of_values_by_head(effects_config, "\\S+");
   Effect *effects[MAX_CHAIN_LENGTH];
-  int i = 0;
-  while (it != end)
+  for (int i = 0; i < effect_configs_vector.size(); i++)
   {
-    std::string effect_config = it->str();
-
-    effect_config = std::regex_replace(effect_config, replace_begin_regex, "");
-    std::cout << effect_config << std::endl;
-    effects[i] = (Effect *)Factory::create(effect_config, address + ".effects[" + std::to_string(i) + "].");
-    i++;
-    it++;
+    effects[i] = (Chain *)Factory::create(effect_configs_vector.at(i), address + ".effects[" + std::to_string(i) + "].");
   }
-  // std::cout << "Amount of effects in chain: " << i << std::endl;
-  Chain *chain = new Chain(effects, i);
+
+  Chain *chain = new Chain(effects, effect_configs_vector.size());
   registerEffect(address, chain);
   return chain;
 };

@@ -11,6 +11,7 @@ public:
   int delay_depth = 0;
   Delay(int delay_depth);
   int eval(int input_signal);
+  int *getPointerTo(std::string target);
 
 private:
   int buffer[MAX_RECORD_LENGTH];

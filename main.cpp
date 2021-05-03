@@ -44,6 +44,9 @@ int main()
 
   pedal->buttons[0]->pressed = true;
   pedal->buttons[0]->eval(0);
+  std::cout << pedal->interface->current->getDisplay() << std::endl;
+  pedal->interface->current->triggerAction("select");
+  std::cout << pedal->interface->current->getDisplay() << std::endl;
 
   in = 15;
   out = pedal->eval(in);

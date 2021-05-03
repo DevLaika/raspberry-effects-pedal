@@ -45,78 +45,30 @@ void Button::act()
 
 Button *ButtonFactory::create(std::string config, std::string address)
 {
-  std::regex idle_regex("(^|\\n)idle(\n( {2})+\\S+)*"), press_regex("(^|\\n)press(\n( {2})+\\S+)*"), hold_regex("(^|\\n)hold(\n( {2})+\\S+)*"), release_regex("(^|\\n)release(\n( {2})+\\S+)*");
-  std::smatch idle_match, press_match, hold_match, release_match;
-  std::regex_search(config, idle_match, idle_regex);
-  std::regex_search(config, press_match, press_regex);
-  std::regex_search(config, hold_match, hold_regex);
-  std::regex_search(config, release_match, release_regex);
 
-  std::string idle_config, press_config, hold_config, release_config;
-  idle_config = idle_match.str();
-  press_config = press_match.str();
-  hold_config = hold_match.str();
-  release_config = release_match.str();
+  std::string state_configs[amt_states];
+  state_configs[idle] = pedalconfig::get_body_by_head(config, "idle");
+  state_configs[press] = pedalconfig::get_body_by_head(config, "press");
+  state_configs[hold] = pedalconfig::get_body_by_head(config, "hold");
+  state_configs[release] = pedalconfig::get_body_by_head(config, "release");
 
-  std::regex replace_name_regex("^\\S+\\n?"), replace_spaces_regex("(^|\\n) {2}"), replace_begin_regex("^\\n");
-  idle_config = std::regex_replace(idle_config, replace_begin_regex, "");
-  idle_config = std::regex_replace(idle_config, replace_name_regex, "");
-  idle_config = std::regex_replace(idle_config, replace_spaces_regex, "\n");
-  idle_config = std::regex_replace(idle_config, replace_begin_regex, "");
-
-  press_config = std::regex_replace(press_config, replace_begin_regex, "");
-  press_config = std::regex_replace(press_config, replace_name_regex, "");
-  press_config = std::regex_replace(press_config, replace_spaces_regex, "\n");
-  press_config = std::regex_replace(press_config, replace_begin_regex, "");
-
-  hold_config = std::regex_replace(hold_config, replace_begin_regex, "");
-  hold_config = std::regex_replace(hold_config, replace_name_regex, "");
-  hold_config = std::regex_replace(hold_config, replace_spaces_regex, "\n");
-  hold_config = std::regex_replace(hold_config, replace_begin_regex, "");
-
-  release_config = std::regex_replace(release_config, replace_begin_regex, "");
-  release_config = std::regex_replace(release_config, replace_name_regex, "");
-  release_config = std::regex_replace(release_config, replace_spaces_regex, "\n");
-  release_config = std::regex_replace(release_config, replace_begin_regex, "");
-
-  std::smatch state_address_matches[amt_states];
-  std::regex address_regex("^\\S+");
-  std::regex_search(idle_config, state_address_matches[idle], address_regex);
-  std::regex_search(press_config, state_address_matches[press], address_regex);
-  std::regex_search(hold_config, state_address_matches[hold], address_regex);
-  std::regex_search(release_config, state_address_matches[release], address_regex);
-
+  std::string actions[amt_states];
   Effect *targets[amt_states];
   Effect *dummy = new Effect();
 
   for (int i = 0; i < amt_states; i++)
   {
-    targets[i] = (state_address_matches[i].str() != "") ? getEffectMap()[state_address_matches[i].str()] : dummy;
-    if (targets[i] == 0)
+    std::string state_target_address = pedalconfig::get_first_head_value(state_configs[i]);
+    targets[i] = (state_target_address != "") ? getEffectMap()[state_target_address] : dummy;
+    if (targets[i] == nullptr)
     {
       std::cout << "[ERROR] You fucked up an address in the button configuration!" << std::endl;
-      std::cout << "Address: \"" << state_address_matches[i].str() << "\" is not a valid address!" << std::endl;
+      std::cout << "address: \"" << state_target_address << "\" is not a valid address!" << std::endl;
       abort();
     }
+
+    actions[i] = pedalconfig::get_first_body_value(state_configs[i]);
   }
-
-  idle_config = std::regex_replace(idle_config, replace_name_regex, "");
-  idle_config = std::regex_replace(idle_config, replace_spaces_regex, "\n");
-  idle_config = std::regex_replace(idle_config, replace_begin_regex, "");
-
-  press_config = std::regex_replace(press_config, replace_name_regex, "");
-  press_config = std::regex_replace(press_config, replace_spaces_regex, "\n");
-  press_config = std::regex_replace(press_config, replace_begin_regex, "");
-
-  hold_config = std::regex_replace(hold_config, replace_name_regex, "");
-  hold_config = std::regex_replace(hold_config, replace_spaces_regex, "\n");
-  hold_config = std::regex_replace(hold_config, replace_begin_regex, "");
-
-  release_config = std::regex_replace(release_config, replace_name_regex, "");
-  release_config = std::regex_replace(release_config, replace_spaces_regex, "\n");
-  release_config = std::regex_replace(release_config, replace_begin_regex, "");
-
-  std::string actions[] = {idle_config, press_config, hold_config, release_config};
 
   Button *button = new Button(targets, actions);
   registerEffect(address, button);

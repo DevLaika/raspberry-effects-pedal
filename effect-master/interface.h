@@ -9,6 +9,7 @@ public:
   static Interface *current;
   std::string title;
   Interface *parent;
+  virtual std::string getDisplay() = 0;
 };
 
 #endif

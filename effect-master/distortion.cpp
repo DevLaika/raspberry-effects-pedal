@@ -12,6 +12,15 @@ int Distortion::eval(int input_signal)
     input_signal = LEVEL_MID - distortion_value;
   return input_signal;
 };
+int *Distortion::getPointerTo(std::string target)
+{
+  if (target == "distortion_value")
+  {
+    return &distortion_value;
+  }
+  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Distortion\"!" << std::endl;
+  abort();
+}
 
 DistortionFactory::DistortionFactory()
 {
@@ -19,7 +28,8 @@ DistortionFactory::DistortionFactory()
 };
 Distortion *DistortionFactory::create(std::string config, std::string address)
 {
-  Distortion *distortion = new Distortion(std::stoi(config));
+  std::string distortion_value_config = pedalconfig::get_body_by_head(config, "distortion_value");
+  Distortion *distortion = new Distortion(std::stoi(distortion_value_config));
   registerEffect(address, distortion);
   return distortion;
 };

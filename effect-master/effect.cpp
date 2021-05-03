@@ -34,19 +34,9 @@ void Factory::registerEffect(const std::string &address, Effect *effect)
 };
 Effect *Factory::create(std::string config, std::string address)
 {
-
-  std::smatch name_match;
-  std::regex name_regex("^\\S+");
-  std::regex_search(config, name_match, name_regex);
-  std::string name = name_match.str();
+  std::string name = pedalconfig::get_first_head_value(config);
+  std::string effect_config = pedalconfig::get_first_body_value(config);
   address = address + name;
-  std::cout << address << std::endl;
-  std::regex replace_name_regex("^\\S+\\n?");
-  std::regex replace_spaces_regex("(^|\\n) {2}");
-  std::regex replace_begin_regex("^\\n");
-  config = std::regex_replace(config, replace_name_regex, "");
-  config = std::regex_replace(config, replace_spaces_regex, "\n");
-  config = std::regex_replace(config, replace_begin_regex, "");
 
-  return getFactoryMap()[name]->create(config, address);
+  return getFactoryMap()[name]->create(effect_config, address);
 };

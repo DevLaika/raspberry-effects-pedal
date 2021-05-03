@@ -8,9 +8,9 @@ class Fuzz : public Effect
 public:
   Fuzz(int fuzz_value);
   int eval(int input_signal);
-  void setValue(int new_fuzz_value);
-  int getPointerTo();
+  int *getPointerTo();
   int fuzz_value = 0;
+  int *getPointerTo(std::string target);
 };
 
 class FuzzFactory : Factory

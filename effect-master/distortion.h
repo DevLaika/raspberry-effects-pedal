@@ -9,6 +9,7 @@ public:
   int distortion_value = 0;
   Distortion(int distortion_value);
   int eval(int input_signal);
+  int *getPointerTo(std::string target);
 };
 
 class DistortionFactory : Factory

@@ -40,3 +40,18 @@ std::string pedalconfig::get_first_body_value(std::string string)
 
   return string;
 }
+
+std::vector<std::string> pedalconfig::get_vector_of_values_by_head(std::string string, std::string key)
+{
+
+  std::regex regex("(?!\\n)" + key + "(\n( {2})+\\S+)*");
+  std::sregex_iterator it(string.begin(), string.end(), regex);
+  std::sregex_iterator end;
+  std::vector<std::string> strings;
+  while (it != end)
+  {
+    strings.push_back(it->str());
+    it++;
+  }
+  return strings;
+}

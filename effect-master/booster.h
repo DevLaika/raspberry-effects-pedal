@@ -9,9 +9,10 @@ public:
   int booster_value = 0;
   Booster(int booster_value);
   int eval(int input_signal);
+  int *getPointerTo(std::string target);
 };
 
-class BoosterFactory : Factory
+class BoosterFactory : public Factory
 {
 public:
   BoosterFactory();

@@ -12,17 +12,24 @@ int Fuzz::eval(int input_signal)
     input_signal = LEVEL_MIN;
   return input_signal;
 };
-void Fuzz::setValue(int new_value)
+int *Fuzz::getPointerTo(std::string target)
 {
-  fuzz_value = new_value;
+  if (target == "fuzz_value")
+  {
+    return &fuzz_value;
+  }
+  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Fuzz\"!" << std::endl;
+  abort();
 }
+
 FuzzFactory::FuzzFactory()
 {
   registerFactory("fuzz", this);
 };
 Fuzz *FuzzFactory::create(std::string config, std::string address)
 {
-  Fuzz *fuzz = new Fuzz(std::stoi(config));
+  std::string full_value_config = pedalconfig::get_body_by_head(config, "fuzz_value");
+  Fuzz *fuzz = new Fuzz(std::stoi(full_value_config));
   registerEffect(address, fuzz);
   return fuzz;
 };

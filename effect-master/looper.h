@@ -20,7 +20,7 @@ private:
   int length = 0;
 };
 
-class LooperFactory : Factory
+class LooperFactory : public Factory
 {
 public:
   LooperFactory();

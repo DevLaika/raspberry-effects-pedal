@@ -9,6 +9,7 @@ public:
   Page(std::string title, int *value);
   void triggerAction(std::string action);
   Interface *parent;
+  std::string getDisplay();
 
 private:
   int *value;

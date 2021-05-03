@@ -9,7 +9,7 @@ pedal
   buttons
     button
       idle
-      pressss
+      press
         pedal.effect.chain.effects[0].looper
           startstop
       hold
