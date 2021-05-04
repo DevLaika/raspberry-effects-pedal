@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/effect-master"
+                "${workspaceFolder}/effect-master",
+                "${workspaceFolder}/pigpio-master"
             ],
             "defines": [
                 "_DEBUG",

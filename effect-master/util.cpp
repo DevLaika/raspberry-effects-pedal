@@ -2,16 +2,16 @@
 
 std::string pedalconfig::get_body_by_head(std::string string, std::string key)
 {
-  std::regex regex("(^|\\n)" + key + "(\n( {2})+\\S+)*");
+  std::regex regex("(^|\\r?\\n)" + key + "(\\r?\\n( {2})+\\S+)*");
   std::smatch match;
   std::regex_search(string, match, regex);
   std::string body = match.str();
 
-  std::regex replace_begin_regex("^\\n");
+  std::regex replace_begin_regex("^\\r?\\n");
   body = std::regex_replace(body, replace_begin_regex, "");
 
-  std::regex replace_name_regex("^\\S+\\n?");
-  std::regex replace_spaces_regex("(^|\\n) {2}");
+  std::regex replace_name_regex("^\\S+\\r?\\n?");
+  std::regex replace_spaces_regex("(^|\\r?\\n) {2}");
   body = std::regex_replace(body, replace_name_regex, "");
   body = std::regex_replace(body, replace_spaces_regex, "\n");
   body = std::regex_replace(body, replace_begin_regex, "");
@@ -31,9 +31,9 @@ std::string pedalconfig::get_first_head_value(std::string string)
 
 std::string pedalconfig::get_first_body_value(std::string string)
 {
-  std::regex replace_name_regex("^\\S+\\n?");
-  std::regex replace_spaces_regex("(^|\\n) {2}");
-  std::regex replace_begin_regex("^\\n");
+  std::regex replace_name_regex("^\\S+\\r?\\n?");
+  std::regex replace_spaces_regex("(^|\\r?\\n) {2}");
+  std::regex replace_begin_regex("^\\r?\\n");
   string = std::regex_replace(string, replace_name_regex, "");
   string = std::regex_replace(string, replace_spaces_regex, "\n");
   string = std::regex_replace(string, replace_begin_regex, "");
@@ -44,7 +44,7 @@ std::string pedalconfig::get_first_body_value(std::string string)
 std::vector<std::string> pedalconfig::get_vector_of_values_by_head(std::string string, std::string key)
 {
 
-  std::regex regex("(?!\\n)" + key + "(\n( {2})+\\S+)*");
+  std::regex regex("(?!\\r?\\n)" + key + "(\\r?\\n( {2})+\\S+)*");
   std::sregex_iterator it(string.begin(), string.end(), regex);
   std::sregex_iterator end;
   std::vector<std::string> strings;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <pigpio>
 #include "effect-master/effect.h"
 #include "effect-master/pedal.h"
 
@@ -18,12 +19,19 @@ int main()
 
   while (true)
   {
+    if (!gpioInitialise())
+    {
+      std::cout << "[ERROR] pigpio failed to initialise!" << std::endl;
+      abort();
+    }
     // bcm2835_spi_transfernb(mosi, miso, 3);
     // int input_signal = ((miso[1] & 0x0F) << 8) + miso[2];
+    // PIGPIO : spiXfer(...)
 
     // int output_signal = pedal->effect->eval(input_signal);
     // bcm2835_pwm_set_data(1, output_signal & 0x3F);
     // bcm2835_pwm_set_data(0, output_signal >> 6);
+    // PIGPIO : gpioHardwarePWM(...) SPECIFY THE PIN RATHER THAN THE CHANNEL!!
 
     int in;
     int out;
