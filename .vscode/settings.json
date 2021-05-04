@@ -48,6 +48,9 @@
     "xstring": "cpp",
     "xtr1common": "cpp",
     "xtree": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "lcdhd44780.h": "c",
+    "stdbool.h": "c",
+    "bcm2835.h": "c"
   }
 }

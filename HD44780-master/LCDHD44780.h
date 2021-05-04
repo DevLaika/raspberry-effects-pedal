@@ -170,8 +170,6 @@ void clear_lcd(void);
 
 void set_cursor(uint8_t addr);
 
-uint8_t busy_wait(void);
-
 void display_off(void);
 
 void show_cursor(bool on);
@@ -187,8 +185,6 @@ void return_home(void);
 void write_to_lcd(uint8_t byte, uint8_t mode);
 
 void write_string(char *str);
-
-uint8_t read_from_lcd(uint8_t mode);
 
 void gpio_reset(void);
 
