@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <pigpio>
+#include <pigpio.h>
 #include "effect-master/effect.h"
 #include "effect-master/pedal.h"
 

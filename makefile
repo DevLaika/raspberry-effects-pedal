@@ -1,13 +1,11 @@
 CC = g++
 CFLAGS = -Wall -c -g
-LFLAGS = -Wall -g
+LFLAGS = -Wall -g -pthread -lpigpio -lrt
 
 MAIN = main
 
 CPP = $(wildcard effect-master/*.cpp)
-C = pigpio-master/pigpio.c
 CPPO = $(patsubst %.cpp,%.o, $(CPP))
-CO = $(patsubst %.c,%.o, $(C))
 
 EFFECT = effect.cpp
 PEDAL = pedal.cpp
@@ -17,7 +15,7 @@ LOOPER = looper.cpp
 LOWPASS = lowpass.cpp
 BUTTON = button.cpp
 
-install: $(MAIN).o $(CPPO) $(CO)
+install: $(MAIN).o $(CPPO)
 	$(CC) $(LFLAGS) $^ -o $(MAIN)
 
 $(MAIN).o: $(MAIN).cpp
@@ -26,9 +24,6 @@ $(MAIN).o: $(MAIN).cpp
 $(CPPO): %.o: %.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
-$(CO): %.o: %.c
-	$(CC) $(CFLAGS) $< -o $@
-
 clean:
 #	del $(MAIN).exe $(MAIN).o $(subst /,\, $(CPPO)) $(subst /,\, $(CO));
-	rm $(MAIN) $(MAIN).o $(CPPO);
+	rm -f $(MAIN) $(MAIN).o $(CPPO);
