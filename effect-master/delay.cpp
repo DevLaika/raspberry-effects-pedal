@@ -22,7 +22,7 @@ int *Delay::getPointerTo(std::string target)
   {
     return &delay_depth;
   }
-  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Delay\"!" << std::endl;
+  std::cout << "[ERR] \"" << target << "\" is not a valid value target for \"Delay\"!" << std::endl;
   abort();
 }
 

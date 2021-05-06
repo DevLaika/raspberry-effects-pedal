@@ -15,7 +15,7 @@ int *Booster::getPointerTo(std::string target)
   {
     return &booster_value;
   }
-  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Booster\"!" << std::endl;
+  std::cout << "[ERR] \"" << target << "\" is not a valid value target for \"Booster\"!" << std::endl;
   abort();
 }
 

@@ -15,7 +15,7 @@ void Looper::triggerAction(std::string action)
     isRecording = ((isRecording + 1) % 128) * 127; // Toggle whether or not it is recording
     return;
   }
-  std::cout << "[WARNING] \"" << action << "\" is not a valid action for \"looper\"!" << std::endl;
+  std::cout << "[WAR] \"" << action << "\" is not a valid action for \"looper\"!" << std::endl;
 };
 int Looper::eval(int input_signal)
 {
@@ -61,7 +61,7 @@ int *Looper::getPointerTo(std::string target)
   {
     return &isRecording;
   }
-  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for looper!" << std::endl;
+  std::cout << "[ERR] \"" << target << "\" is not a valid value target for looper!" << std::endl;
   abort();
 }
 

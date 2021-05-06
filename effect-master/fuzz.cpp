@@ -18,7 +18,7 @@ int *Fuzz::getPointerTo(std::string target)
   {
     return &fuzz_value;
   }
-  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Fuzz\"!" << std::endl;
+  std::cout << "[ERR] \"" << target << "\" is not a valid value target for \"Fuzz\"!" << std::endl;
   abort();
 }
 

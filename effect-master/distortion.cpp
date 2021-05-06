@@ -18,7 +18,7 @@ int *Distortion::getPointerTo(std::string target)
   {
     return &distortion_value;
   }
-  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Distortion\"!" << std::endl;
+  std::cout << "[ERR] \"" << target << "\" is not a valid value target for \"Distortion\"!" << std::endl;
   abort();
 }
 

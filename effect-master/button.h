@@ -2,7 +2,6 @@
 #define BUTTON_H
 
 #include "effect.h"
-#define CLOCKS_PER_MILLISEC CLOCKS_PER_SEC / 1000
 
 enum states
 {
@@ -13,15 +12,15 @@ enum states
   amt_states
 };
 
-class Button : public Effect
+class Button : public Object
 {
 public:
   Button(Effect *targets[amt_states], std::string actions[amt_states]);
-  int eval(int input_signal);
+  void eval();
   void act();
   bool pressed = false;
+  std::string serialize();
 
-protected:
 private:
   states state = idle;
   bool pressed_previous = false;

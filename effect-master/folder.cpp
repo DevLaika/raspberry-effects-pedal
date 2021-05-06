@@ -4,7 +4,7 @@ Folder::Folder(std::string _title, Interface *_interfaces[], int _size)
 {
   title = _title;
   size = _size;
-  for (int i = 0; i < size; i++)
+  for (uint8_t i = 0; i < size; i++)
   {
     interfaces[i] = _interfaces[i];
   }
@@ -37,7 +37,7 @@ void Folder::triggerAction(std::string action)
     current = parent;
     return;
   }
-  std::cout << "[WARNING] \"" << action << " is not a valid action for \"Folder\"" << std::endl;
+  std::cout << "[WAR] \"" << action << " is not a valid action for \"Folder\"" << std::endl;
   return;
 }
 
@@ -53,13 +53,13 @@ Folder *FolderFactory::create(std::string config, std::string address)
   std::vector<std::string> interface_configs_vector = pedalconfig::get_vector_of_values_by_head(interfaces_config, "\\S+");
 
   Interface *interfaces[MAX_INTERFACES];
-  for (int i = 0; i < interface_configs_vector.size(); i++)
+  for (uint8_t i = 0; i < interface_configs_vector.size(); i++)
   {
     interfaces[i] = (Interface *)Factory::create(interface_configs_vector.at(i), address + ".interfaces[" + std::to_string(i) + "].");
   }
 
   Folder *folder = new Folder(title_config, interfaces, interface_configs_vector.size());
-  for (int i = 0; i < interface_configs_vector.size(); i++)
+  for (uint8_t i = 0; i < interface_configs_vector.size(); i++)
   {
     interfaces[i]->parent = folder;
   }

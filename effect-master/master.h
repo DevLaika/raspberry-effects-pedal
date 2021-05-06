@@ -13,6 +13,7 @@ public:
   Chain *masterChain = nullptr;
   Master(Chain *_chains[], int _length, Chain *_masterChain = nullptr);
   int eval(int input_signal);
+  std::string serialize();
 
 private:
   int length;

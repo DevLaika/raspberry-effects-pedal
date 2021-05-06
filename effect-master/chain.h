@@ -11,6 +11,7 @@ public:
   Effect *effects[MAX_CHAIN_LENGTH];
   Chain(Effect *_effects[], int _length);
   int eval(int input_signal);
+  std::string serialize();
 
 private:
   int length;

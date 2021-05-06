@@ -31,14 +31,21 @@ std::string pedalconfig::get_first_head_value(std::string string)
 
 std::string pedalconfig::get_first_body_value(std::string string)
 {
-  std::regex replace_name_regex("^\\S+\\r?\\n?");
-  std::regex replace_spaces_regex("(^|\\r?\\n) {2}");
-  std::regex replace_begin_regex("^\\r?\\n");
-  string = std::regex_replace(string, replace_name_regex, "");
-  string = std::regex_replace(string, replace_spaces_regex, "\n");
-  string = std::regex_replace(string, replace_begin_regex, "");
+  std::regex replace_head_regex("^\\S+\\r?\\n?");
+  std::regex replace_indent_regex("(^|\\r?\\n) {2}");
+  std::regex replace_starting_newline_regex("^\\r?\\n");
+  std::string string_without_head = std::regex_replace(string, replace_head_regex, "");
+  std::string string_without_head_and_indent = std::regex_replace(string_without_head, replace_indent_regex, "\n");
+  std::string string_without_head_and_indent_and_starting_newline = std::regex_replace(string_without_head_and_indent, replace_starting_newline_regex, "");
 
-  return string;
+  return string_without_head_and_indent_and_starting_newline;
+}
+
+std::string pedalconfig::indent(std::string string)
+{
+  std::regex regex("^|\\r?\\n  ");
+  std::string return_string = std::regex_replace(string, regex, "  ");
+  return return_string;
 }
 
 std::vector<std::string> pedalconfig::get_vector_of_values_by_head(std::string string, std::string key)

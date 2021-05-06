@@ -5,27 +5,85 @@
 #include "effect-master/effect.h"
 #include "effect-master/pedal.h"
 
-// char mosi[10] = {0x01, 0x00, 0x00};
-// char miso[10] = {0};
+#define PIN_PWM_PWM0 12 //  RaspberryPi PWM0 GPIO Pin
+#define PIN_PWM_PWM1 13 //  RaspberryPi PWM1 GPIO Pin
+
+#define PIN_SPI_MISO 9
+#define PIN_SPI_MOSI 10
+#define PIN_SPI_SCLK 11
+#define PIN_SPI_CE0 8
+#define PIN_SPI_CE1
+
+char buf[2] = {0, 0};
+
+int spiHandle;
+
+void setup()
+{
+  if (gpioInitialise() < 0)
+  {
+    std::cout << "\033[;31m"
+              << "[ERR] pigpio failed to initialise!" << std::endl
+              << "    | This might be because you've forgotten to run this command as root." << std::endl
+              << "    | Try running as root, e.g. precede the command with \"sudo\"."
+              << std::endl
+              << "\033[0m";
+    abort();
+  }
+  std::cout << "[INF] pigpio library initialisation was successful!" << std::endl;
+  if (gpioHardwarePWM(PIN_PWM_PWM0, 19230769, 0) || gpioHardwarePWM(PIN_PWM_PWM1, 19230769, 0))
+  {
+    std::cout << "[ERR] PWM pins failed to initialise!" << std::endl
+              << "      | Are they defined correctly?" << std::endl;
+    abort();
+  }
+  std::cout << "\033[;36m"
+            << "[INF] PWM initialisation was successful!" << std::endl
+            << "    | Set PWM frequencies are:" << std::endl
+            << "    | PWM0 on pin " << PIN_PWM_PWM0 << ": " << gpioGetPWMfrequency(PIN_PWM_PWM0) << "Hz." << std::endl
+            << "    | PWM1 on pin " << PIN_PWM_PWM1 << ": " << gpioGetPWMfrequency(PIN_PWM_PWM1) << "Hz." << std::endl
+            << "\033[0m";
+  if (gpioSetPWMrange(PIN_PWM_PWM0, 63) < 0 || gpioSetPWMrange(PIN_PWM_PWM1, 63) < 0)
+  {
+    std::cout << "[ERR] PWM pins failed to set their range!" << std::endl;
+    abort();
+  }
+  std::cout << "[INF] PWM pins have set their ranges successfully!" << std::endl
+            << "    | Set PWM ranges are:" << std::endl
+            << "    | PWM0 on pin " << PIN_PWM_PWM0 << ": " << gpioGetPWMrealRange(PIN_PWM_PWM0) << "." << std::endl
+            << "    | PWM1 on pin " << PIN_PWM_PWM1 << ": " << gpioGetPWMrealRange(PIN_PWM_PWM1) << "." << std::endl;
+  spiHandle = spiOpen(0, 4000000, 0b0000000000000011000000);
+  if (spiHandle < 0)
+  {
+    std::cout << "[ERR] SPI failed to open!" << std::endl
+              << "    | Is your SPI configuration correct?";
+  }
+}
 
 int main()
 {
+
+  setup();
+
   std::ifstream ifs("conf.pedal");
   std::string config((std::istreambuf_iterator<char>(ifs)),
                      (std::istreambuf_iterator<char>()));
 
   Factory *factory = new Factory();
   Pedal *pedal = (Pedal *)factory->create(config, "");
+  std::cout << "serial" << std::endl;
+  std::cout << pedal->serialize() << std::endl;
 
   while (true)
   {
-    if (!gpioInitialise())
-    {
-      std::cout << "[ERROR] pigpio failed to initialise!" << std::endl;
-      abort();
-    }
     // bcm2835_spi_transfernb(mosi, miso, 3);
-    // int input_signal = ((miso[1] & 0x0F) << 8) + miso[2];
+    if (spiRead(spiHandle, buf, 12) < 0)
+    {
+      std::cout << "[WAR] Failed to read SPI data!" << std::endl
+                << "    | Is your SPI handle set up correctly?";
+    }
+    int input_signal = ((buf[1] & 0x0F) << 8) | buf[0];
+    std::cout << input_signal << std::endl;
     // PIGPIO : spiXfer(...)
 
     // int output_signal = pedal->effect->eval(input_signal);
@@ -36,54 +94,54 @@ int main()
     int in;
     int out;
     in = 10;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 20;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 30;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 40;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 50;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     pedal->buttons[0]->pressed = true;
-    pedal->buttons[0]->eval(0);
+    pedal->buttons[0]->eval();
     std::cout << pedal->interface->current->getDisplay() << std::endl;
     pedal->interface->current->triggerAction("select");
     std::cout << pedal->interface->current->getDisplay() << std::endl;
 
     in = 15;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 25;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 35;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 45;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     in = 55;
-    out = pedal->eval(in);
+    out = pedal->effect->eval(in);
     std::cout << "in " << in << " ,out " << out << "\n";
 
     break;
   }
 
-  std::cout << "[INFO] End of \"main()\"";
+  std::cout << "[INF] End of \"main()\"" << std::endl;
   return 0;
 };

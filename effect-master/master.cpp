@@ -5,7 +5,7 @@ Master::Master(Chain *_chains[], int _length, Chain *_masterChain)
   length = _length;
   if (_masterChain != nullptr)
     masterChain = _masterChain;
-  for (int i = 0; i < length; i++)
+  for (uint8_t i = 0; i < length; i++)
   {
     chains[i] = _chains[i];
   }
@@ -19,7 +19,7 @@ int Master::eval(int input_signal)
   output_signal = chains[0]->eval(input_signal);
   if (length > 1)
   {
-    for (int i = 1; i < length; i++)
+    for (uint8_t i = 1; i < length; i++)
     {
       output_signal =
           (output_signal + chains[i]->eval(input_signal)) >> 1;
@@ -31,6 +31,10 @@ int Master::eval(int input_signal)
   }
   return output_signal;
 };
+std::string Master::serialize()
+{
+  return "PLACEHOLDER!!!";
+}
 
 MasterFactory::MasterFactory()
 {
@@ -45,7 +49,7 @@ Master *MasterFactory::create(std::string config, std::string address)
   std::vector<std::string> chain_configs_vector = pedalconfig::get_vector_of_values_by_head(chains_config, "chain");
 
   Chain *chains[MAX_CHAIN_LENGTH];
-  for (int i = 0; i < chain_configs_vector.size(); i++)
+  for (uint8_t i = 0; i < chain_configs_vector.size(); i++)
   {
     chains[i] = (Chain *)Factory::create(chain_configs_vector.at(i), address + ".chains[" + std::to_string(i) + "].");
   }

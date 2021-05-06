@@ -2,7 +2,7 @@
 
 Button::Button(Effect *_targets[amt_states], std::string _actions[amt_states])
 {
-  for (int i = 0; i < amt_states; i++)
+  for (uint8_t i = 0; i < amt_states; i++)
   {
     targets[i] = _targets[i];
     actions[i] = _actions[i];
@@ -10,7 +10,7 @@ Button::Button(Effect *_targets[amt_states], std::string _actions[amt_states])
   act();
 };
 
-int Button::eval(int input_signal)
+void Button::eval()
 {
   if (pressed_previous != pressed)
   {
@@ -25,14 +25,10 @@ int Button::eval(int input_signal)
     }
     act();
   }
-  return input_signal;
 };
 
 void Button::act()
 {
-  std::cout << "state: " << state << std::endl;
-  std::cout << "action: " << actions[state] << std::endl;
-  std::cout << "target: " << targets[state] << std::endl;
   if (actions[state] == "")
     return;
   if (actions[state] == "toggle")
@@ -41,6 +37,10 @@ void Button::act()
     return;
   }
   targets[state]->triggerAction(actions[state]);
+}
+std::string Button::serialize()
+{
+  return "HI IM SERIALISED BUTTON";
 }
 
 Button *ButtonFactory::create(std::string config, std::string address)
@@ -56,13 +56,13 @@ Button *ButtonFactory::create(std::string config, std::string address)
   Effect *targets[amt_states];
   Effect *dummy = new Effect();
 
-  for (int i = 0; i < amt_states; i++)
+  for (uint8_t i = 0; i < amt_states; i++)
   {
     std::string state_target_address = pedalconfig::get_first_head_value(state_configs[i]);
     targets[i] = (state_target_address != "") ? getEffectMap()[state_target_address] : dummy;
     if (targets[i] == nullptr)
     {
-      std::cout << "[ERROR] You fucked up an address in the button configuration!" << std::endl;
+      std::cout << "[ERR] You fucked up an address in the button configuration!" << std::endl;
       std::cout << "address: \"" << state_target_address << "\" is not a valid address!" << std::endl;
       abort();
     }
@@ -71,7 +71,6 @@ Button *ButtonFactory::create(std::string config, std::string address)
   }
 
   Button *button = new Button(targets, actions);
-  registerEffect(address, button);
   return button;
 }
 

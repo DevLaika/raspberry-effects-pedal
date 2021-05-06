@@ -3,7 +3,7 @@
 
 #include "effect.h"
 
-class Interface : public Effect
+class Interface : public Object
 {
 public:
   static Interface *current;

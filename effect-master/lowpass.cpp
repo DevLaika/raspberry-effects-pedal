@@ -31,7 +31,7 @@ int *Lowpass::getPointerTo(std::string target)
   {
     return &smoothing_value;
   }
-  std::cout << "[ERROR] \"" << target << "\" is not a valid value target for \"Lowpass\"!" << std::endl;
+  std::cout << "[ERR] \"" << target << "\" is not a valid value target for \"Lowpass\"!" << std::endl;
   abort();
 };
 
