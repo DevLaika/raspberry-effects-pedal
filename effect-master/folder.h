@@ -10,6 +10,7 @@ class Folder : public Interface
 public:
   Folder(std::string title, Interface *interfaces[], int size);
   void triggerAction(std::string action);
+  std::string serialize();
   std::string getDisplay();
   Interface *interfaces[MAX_INTERFACES];
   Interface *parent;

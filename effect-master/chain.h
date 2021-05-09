@@ -4,6 +4,7 @@
 #define MAX_CHAIN_LENGTH 16
 
 #include "effect.h"
+#include <sstream>
 
 class Chain : public Effect
 {

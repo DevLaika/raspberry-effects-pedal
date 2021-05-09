@@ -34,6 +34,17 @@ void Page::triggerAction(std::string action)
   std::cout << "[WAR] \"" << action << " is not a valid action for \"Page\"" << std::endl;
   return;
 }
+std::string Page::serialize()
+{
+  std::stringstream stream;
+  stream << "page"
+         << "\n"
+         << pedalconfig::indent("title") << "\n"
+         << pedalconfig::indent(pedalconfig::indent(title)) << "\n"
+         << pedalconfig::indent("value") << "\n"
+         << pedalconfig::indent(pedalconfig::indent("how do i get addresses in here???"));
+  return stream.str();
+}
 
 PageFactory::PageFactory()
 {

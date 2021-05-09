@@ -2,10 +2,10 @@
 #define PEDAL_H
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <map>
 #include <regex>
+#include <sstream>
 
 #include "effect.h"
 #include "button.h"

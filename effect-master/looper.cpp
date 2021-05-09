@@ -43,6 +43,12 @@ int Looper::eval(int input_signal)
   }
   return input_signal;
 };
+std::string Looper::serialize()
+{
+  std::stringstream stream;
+  stream << "looper";
+  return stream.str();
+}
 
 LooperFactory::LooperFactory()
 {

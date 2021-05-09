@@ -22,27 +22,27 @@ void setup()
 {
   if (gpioInitialise() < 0)
   {
-    std::cout << "\033[;31m"
-              << "[ERR] pigpio failed to initialise!" << std::endl
-              << "    | This might be because you've forgotten to run this command as root." << std::endl
-              << "    | Try running as root, e.g. precede the command with \"sudo\"."
-              << std::endl
-              << "\033[0m";
-    abort();
+    gpioTerminate();
+    if (gpioInitialise() < 0)
+    {
+      std::cout << "[ERR] pigpio failed to initialise!" << std::endl
+                << "    | This might be because you've forgotten to run this command as root." << std::endl
+                << "    | Try running as root, e.g. precede the command with \"sudo\"."
+                << std::endl;
+      abort();
+    }
   }
   std::cout << "[INF] pigpio library initialisation was successful!" << std::endl;
   if (gpioHardwarePWM(PIN_PWM_PWM0, 19230769, 0) || gpioHardwarePWM(PIN_PWM_PWM1, 19230769, 0))
   {
     std::cout << "[ERR] PWM pins failed to initialise!" << std::endl
-              << "      | Are they defined correctly?" << std::endl;
+              << "    | Are they defined correctly?" << std::endl;
     abort();
   }
-  std::cout << "\033[;36m"
-            << "[INF] PWM initialisation was successful!" << std::endl
+  std::cout << "[INF] PWM initialisation was successful!" << std::endl
             << "    | Set PWM frequencies are:" << std::endl
             << "    | PWM0 on pin " << PIN_PWM_PWM0 << ": " << gpioGetPWMfrequency(PIN_PWM_PWM0) << "Hz." << std::endl
-            << "    | PWM1 on pin " << PIN_PWM_PWM1 << ": " << gpioGetPWMfrequency(PIN_PWM_PWM1) << "Hz." << std::endl
-            << "\033[0m";
+            << "    | PWM1 on pin " << PIN_PWM_PWM1 << ": " << gpioGetPWMfrequency(PIN_PWM_PWM1) << "Hz." << std::endl;
   if (gpioSetPWMrange(PIN_PWM_PWM0, 63) < 0 || gpioSetPWMrange(PIN_PWM_PWM1, 63) < 0)
   {
     std::cout << "[ERR] PWM pins failed to set their range!" << std::endl;

@@ -34,6 +34,15 @@ int *Lowpass::getPointerTo(std::string target)
   std::cout << "[ERR] \"" << target << "\" is not a valid value target for \"Lowpass\"!" << std::endl;
   abort();
 };
+std::string Lowpass::serialize()
+{
+  std::stringstream stream;
+  stream << "lowpass"
+         << "\n"
+         << pedalconfig::indent("smoothing_value") << "\n"
+         << pedalconfig::indent(pedalconfig::indent(std::to_string(smoothing_value)));
+  return stream.str();
+}
 
 LowpassFactory::LowpassFactory()
 {

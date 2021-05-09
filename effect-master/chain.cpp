@@ -25,7 +25,16 @@ int Chain::eval(int input_signal)
 };
 std::string Chain::serialize()
 {
-  return "Serialise from Chain.";
+  std::stringstream stream;
+  stream << "chain"
+         << "\n"
+         << pedalconfig::indent("effects");
+  for (int i = 0; i < length; i++)
+  {
+    stream << "\n"
+           << pedalconfig::indent(pedalconfig::indent(effects[i]->serialize()));
+  }
+  return stream.str();
 }
 
 ChainFactory::ChainFactory()
@@ -38,7 +47,7 @@ Chain *ChainFactory::create(std::string config, std::string address)
 
   std::vector<std::string> effect_configs_vector = pedalconfig::get_vector_of_values_by_head(effects_config, "\\S+");
   Effect *effects[MAX_CHAIN_LENGTH];
-  for (uint8_t i = 0; i < effect_configs_vector.size(); i++)
+  for (uint8_t i = 0; i < effect_configs_vector.size() && i < MAX_CHAIN_LENGTH; i++)
   {
     effects[i] = (Chain *)Factory::create(effect_configs_vector.at(i), address + ".effects[" + std::to_string(i) + "].");
   }

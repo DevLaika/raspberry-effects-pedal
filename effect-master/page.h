@@ -10,6 +10,7 @@ public:
   void triggerAction(std::string action);
   Interface *parent;
   std::string getDisplay();
+  std::string serialize();
 
 private:
   int *value;

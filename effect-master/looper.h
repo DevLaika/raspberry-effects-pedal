@@ -13,6 +13,7 @@ public:
   int eval(int input_signal);
   void triggerAction(std::string action);
   int *getPointerTo(std::string value);
+  std::string serialize();
 
 private:
   int buffer[MAX_RECORD_LENGTH];

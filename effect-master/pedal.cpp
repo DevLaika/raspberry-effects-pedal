@@ -13,15 +13,16 @@ Pedal::Pedal(Effect *_effect, Button *_buttons[MAX_BUTTONS], int _amnt_buttons, 
 std::string Pedal::serialize()
 {
   std::stringstream stream;
-  stream << "pedal" << std::endl
-         << pedalconfig::indent("effect") << std::endl
-         << pedalconfig::indent(pedalconfig::indent(effect->serialize())) << std::endl
-         << pedalconfig::indent("buttons") << std::endl;
+  stream << "pedal"
+         << "\n"
+         << pedalconfig::indent("effect") << "\n"
+         << pedalconfig::indent(pedalconfig::indent(effect->serialize())) << "\n"
+         << pedalconfig::indent("buttons") << "\n";
   for (int i = 0; i < amnt_buttons; i++)
   {
-    stream << pedalconfig::indent(pedalconfig::indent(buttons[i]->serialize())) << std::endl;
+    stream << pedalconfig::indent(pedalconfig::indent(buttons[i]->serialize())) << "\n";
   }
-  stream << pedalconfig::indent("interface") << std::endl
+  stream << pedalconfig::indent("interface") << "\n"
          << pedalconfig::indent(pedalconfig::indent(interface->serialize()));
   return stream.str();
 };
@@ -32,9 +33,9 @@ Pedal *PedalFactory::create(std::string config, std::string address)
   Effect *effect = (Effect *)Factory::create(effect_config, address + ".effect.");
 
   std::string buttons_config = pedalconfig::get_body_by_head(config, "buttons");
-  std::vector<std::string> button_configs_vector = pedalconfig::get_vector_of_values_by_head(buttons_config, "chain");
+  std::vector<std::string> button_configs_vector = pedalconfig::get_vector_of_values_by_head(buttons_config, "button");
   Button *buttons[MAX_BUTTONS];
-  for (uint8_t i = 0; i < button_configs_vector.size(); i++)
+  for (uint8_t i = 0; i < button_configs_vector.size() && i < MAX_BUTTONS; i++)
   {
     buttons[i] = (Button *)Factory::create(button_configs_vector.at(i), address + ".buttons[" + std::to_string(i) + "].");
   }

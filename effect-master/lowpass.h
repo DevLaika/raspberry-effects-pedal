@@ -11,6 +11,7 @@ public:
   Lowpass(int _smoothing_value);
   int eval(int input_signal);
   int *getPointerTo(std::string target);
+  std::string serialize();
   int smoothing_value = 0;
 
 private:

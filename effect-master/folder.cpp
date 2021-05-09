@@ -40,6 +40,21 @@ void Folder::triggerAction(std::string action)
   std::cout << "[WAR] \"" << action << " is not a valid action for \"Folder\"" << std::endl;
   return;
 }
+std::string Folder::serialize()
+{
+  std::stringstream stream;
+  stream << "folder"
+         << "\n"
+         << pedalconfig::indent("title") << "\n"
+         << pedalconfig::indent(pedalconfig::indent(title)) << "\n"
+         << pedalconfig::indent("interfaces");
+  for (int i = 0; i < size; i++)
+  {
+    stream << "\n"
+           << pedalconfig::indent(pedalconfig::indent(interfaces[i]->serialize()));
+  }
+  return stream.str();
+}
 
 FolderFactory::FolderFactory()
 {
