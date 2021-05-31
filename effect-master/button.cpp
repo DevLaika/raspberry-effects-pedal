@@ -1,10 +1,9 @@
 #include "button.h"
 
-Button::Button(Effect *_targets[amt_states], std::string _actions[amt_states])
+Button::Button(std::function<void()> *_actions[amt_states])
 {
   for (uint8_t i = 0; i < amt_states; i++)
   {
-    targets[i] = _targets[i];
     actions[i] = _actions[i];
   }
   act();
@@ -29,18 +28,38 @@ void Button::eval()
 
 void Button::act()
 {
-  if (actions[state] == "")
-    return;
-  if (actions[state] == "toggle")
+  if (actions[state])
   {
-    targets[state]->enabled = !targets[state]->enabled;
-    return;
+    (*actions[state])();
   }
-  targets[state]->triggerAction(actions[state]);
 }
 std::string Button::serialize()
 {
-  return "HI IM SERIALISED BUTTON";
+  std::stringstream stream;
+  stream << "button"
+         << "\n"
+         << pedalconfig::indent("idle") << "\n";
+  if (actions[idle])
+  {
+    stream << pedalconfig::indent(pedalconfig::indent(Factory::getFunctionNameMap()[actions[idle]])) << "\n";
+  }
+  stream << pedalconfig::indent("press") << "\n";
+  if (actions[press])
+  {
+    stream << pedalconfig::indent(pedalconfig::indent(Factory::getFunctionNameMap()[actions[press]])) << "\n";
+  }
+  stream << pedalconfig::indent("hold") << "\n";
+  if (actions[hold])
+  {
+    stream << pedalconfig::indent(pedalconfig::indent(Factory::getFunctionNameMap()[actions[hold]])) << "\n";
+  }
+  stream << pedalconfig::indent("release");
+  if (actions[release])
+  {
+    stream << "\n"
+           << pedalconfig::indent(pedalconfig::indent(Factory::getFunctionNameMap()[actions[release]]));
+  }
+  return stream.str();
 }
 
 Button *ButtonFactory::create(std::string config, std::string address)
@@ -52,25 +71,23 @@ Button *ButtonFactory::create(std::string config, std::string address)
   state_configs[hold] = pedalconfig::get_body_by_head(config, "hold");
   state_configs[release] = pedalconfig::get_body_by_head(config, "release");
 
-  std::string actions[amt_states];
-  Effect *targets[amt_states];
-  Effect *dummy = new Effect();
+  std::function<void()> *actions[amt_states];
 
   for (uint8_t i = 0; i < amt_states; i++)
   {
-    std::string state_target_address = pedalconfig::get_first_head_value(state_configs[i]);
-    targets[i] = (state_target_address != "") ? getEffectMap()[state_target_address] : dummy;
-    if (targets[i] == nullptr)
+    if (state_configs[i] == "")
     {
-      std::cout << "[ERR] You fucked up an address in the button configuration!" << std::endl;
-      std::cout << "address: \"" << state_target_address << "\" is not a valid address!" << std::endl;
-      abort();
+      actions[i] = nullptr;
+      continue;
     }
-
-    actions[i] = pedalconfig::get_first_body_value(state_configs[i]);
+    if (!getFunctionPointerMap().count(state_configs[i]))
+    {
+      std::cout << "[WAR] In \"" << address << "\": configuration of state " << std::to_string(i) << " (0=idle, 1=press, 2=hold, 3=release) \"" << state_configs[i] << "\" is invalid." << std::endl;
+    }
+    actions[i] = getFunctionPointerMap()[state_configs[i]];
   }
 
-  Button *button = new Button(targets, actions);
+  Button *button = new Button(actions);
   return button;
 }
 

@@ -4,8 +4,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <map>
+#include <unordered_map>
 #include <regex>
+#include <functional>
 #include "util.h"
 
 #define LEVEL_MIN 0
@@ -15,7 +16,6 @@
 class Object
 {
 public:
-  virtual void triggerAction(std::string action);
   virtual std::string serialize();
 };
 
@@ -25,6 +25,7 @@ public:
   bool enabled = true;
   virtual int *getPointerTo(std::string name);
   virtual int eval(int input);
+  void toggle();
 };
 
 class Factory
@@ -33,12 +34,20 @@ public:
   Factory();
   virtual Object *create(std::string config, std::string address);
 
-  static void registerEffect(const std::string &address, Effect *effect);
-  static std::map<std::string, Effect *> &getEffectMap();
+  static void registerValue(const std::string &name, int *value);
+  static std::unordered_map<int *, std::string> &getValueNameMap();
+  static std::unordered_map<std::string, int *> &getValuePointerMap();
 
-protected:
+  static void registerFunction(const std::string &name, std::function<void()> *function);
+  static std::unordered_map<std::function<void()> *, std::string> &getFunctionNameMap();
+  static std::unordered_map<std::string, std::function<void()> *> &getFunctionPointerMap();
+
+  static void registerEffect(const std::string &address, Effect *effect);
+  static std::unordered_map<std::string, Effect *> &getEffectInstanceMap();
+  static std::unordered_map<Effect *, std::string> &getEffectAddressMap();
+
   static void registerFactory(const std::string &name, Factory *factory);
-  static std::map<std::string, Factory *> &getFactoryMap();
+  static std::unordered_map<std::string, Factory *> &getFactoryMap();
 };
 
 #endif

@@ -51,9 +51,14 @@ LowpassFactory::LowpassFactory()
 Lowpass *LowpassFactory::create(std::string config, std::string address)
 {
   std::string smoothing_value_config = pedalconfig::get_body_by_head(config, "smoothing_value");
-
   Lowpass *lowpass = new Lowpass(std::stoi(smoothing_value_config));
   registerEffect(address, lowpass);
+
+  registerValue(address + ".smoothing_value", &lowpass->smoothing_value);
+  std::function<void()> *toggle_l_ptr = new std::function<void()>([lowpass]
+                                                                  { lowpass->toggle(); });
+  registerFunction(address + ".toggle()", toggle_l_ptr);
+
   return lowpass;
 };
 static LowpassFactory global_LowPassFactory;

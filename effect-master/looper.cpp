@@ -1,31 +1,21 @@
 #include "looper.h"
 
-Looper::Looper(){
-    // std::cout << "I am the Looper constructor\n";
-};
-void Looper::triggerAction(std::string action)
+Looper::Looper(){};
+void Looper::startstop()
 {
-  if (action == "startstop")
+  if (isRecording != 0) // End of recording
   {
-    if (isRecording != 0) // End of recording
-    {
-      length = counter; // Set length of recording to current counter
-    }
-    counter = 0;                                   // Play/recoded head back to beginning
-    isRecording = ((isRecording + 1) % 128) * 127; // Toggle whether or not it is recording
-    return;
+    length = counter; // Set length of recording to current counter
   }
-  std::cout << "[WAR] \"" << action << "\" is not a valid action for \"looper\"!" << std::endl;
+  counter = 0;                                   // Play/recoded head back to beginning
+  isRecording = ((isRecording + 1) % 128) * 127; // Toggle whether or not it is recording
 };
 int Looper::eval(int input_signal)
 {
-  // std::cout << "The looper eval was triggered\n";
   if (enabled)
   {
-    // std::cout << "i am enabled\n";
     if (isRecording == true)
     { //start recording
-      // std::cout << "and im recording\n";
 
       buffer[counter] = input_signal;
       counter++;
@@ -33,7 +23,6 @@ int Looper::eval(int input_signal)
     }
     else
     { //bypass mode
-      // std::cout << "and im playing back\n";
 
       input_signal = (buffer[counter] + input_signal) >> 1;
       counter++;
@@ -58,17 +47,14 @@ Looper *LooperFactory::create(std::string config, std::string address)
 {
   Looper *looper = new Looper();
   registerEffect(address, looper);
+  registerValue(address + ".isRecording", &looper->isRecording);
+  std::function<void()> *toggle_l_ptr = new std::function<void()>([looper]
+                                                                  { looper->toggle(); });
+  registerFunction(address + ".toggle()", toggle_l_ptr);
+  std::function<void()> *startstop_l_ptr = new std::function<void()>([looper]
+                                                                     { looper->startstop(); });
+  registerFunction(address + ".startstop()", startstop_l_ptr);
   return looper;
 };
-
-int *Looper::getPointerTo(std::string target)
-{
-  if (target == "isRecording")
-  {
-    return &isRecording;
-  }
-  std::cout << "[ERR] \"" << target << "\" is not a valid value target for looper!" << std::endl;
-  abort();
-}
 
 static LooperFactory global_LooperFactory;

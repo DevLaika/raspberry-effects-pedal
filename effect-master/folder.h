@@ -9,11 +9,13 @@ class Folder : public Interface
 {
 public:
   Folder(std::string title, Interface *interfaces[], int size);
-  void triggerAction(std::string action);
-  std::string serialize();
-  std::string getDisplay();
   Interface *interfaces[MAX_INTERFACES];
-  Interface *parent;
+  std::string serialize();
+  std::string get();
+  void up();
+  void down();
+  void select();
+  void back();
 
 private:
   int selected = 0;

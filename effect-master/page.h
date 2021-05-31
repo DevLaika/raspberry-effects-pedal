@@ -7,16 +7,18 @@ class Page : public Interface
 {
 public:
   Page(std::string title, int *value);
-  void triggerAction(std::string action);
-  Interface *parent;
-  std::string getDisplay();
+  std::string get();
+  void up();
+  void down();
+  void select();
+  void back();
   std::string serialize();
 
 private:
   int *value;
 };
 
-class PageFactory : Factory
+class PageFactory : public Factory
 {
 public:
   PageFactory();
