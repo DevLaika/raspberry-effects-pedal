@@ -10,36 +10,28 @@ Folder::Folder(std::string _title, Interface *_interfaces[], int _size)
   }
   parent = this;
 }
-std::string Folder::getDisplay()
+std::string Folder::get()
 {
   return title + "\n" + interfaces[selected]->title;
 }
 
-void Folder::triggerAction(std::string action)
+void Folder::up()
 {
-  if (action == "add")
-  {
-    selected = (selected + 1) % size;
-    return;
-  }
-  if (action == "remove")
-  {
-    selected = (selected - 1) % size;
-    return;
-  }
-  if (action == "select")
-  {
-    current = interfaces[selected];
-    return;
-  }
-  if (action == "back")
-  {
-    current = parent;
-    return;
-  }
-  std::cout << "[WAR] \"" << action << " is not a valid action for \"Folder\"" << std::endl;
-  return;
+  selected = (selected + 1) % size;
 }
+void Folder::down()
+{
+  selected = (selected - 1) % size;
+}
+void Folder::select()
+{
+  current = interfaces[selected];
+}
+void Folder::back()
+{
+  current = parent;
+}
+
 std::string Folder::serialize()
 {
   std::stringstream stream;

@@ -1,0 +1,11 @@
+pedal
+  effect
+    master
+      chains
+        chain
+          reverb
+            /*very wet 💦💦💦*/
+        chain
+          oct-up
+          reverb
+          high-cut

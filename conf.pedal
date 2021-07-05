@@ -10,15 +10,13 @@ pedal
     button
       idle
       press
-        pedal.effect.chain.effects[0].looper
-          startstop
+        pedal.effect.chain.effects[0].looper.startstop()
       hold
       release
     button
       idle
       press
-        pedal.effect.chain.effects[1].lowpass
-          toggle
+        pedal.effect.chain.effects[1].lowpass.toggle()
       hold
       release
   interface
@@ -30,8 +28,7 @@ pedal
           title
             looperrecording
           value
-            pedal.effect.chain.effects[0].looper
-              isRecording
+            pedal.effect.chain.effects[0].looper.isRecording
         folder
           title
             smoothing
@@ -40,5 +37,4 @@ pedal
               title
                 lowpass
               value
-                pedal.effect.chain.effects[1].lowpass
-                  smoothing_value
+                pedal.effect.chain.effects[1].lowpass.smoothing_value

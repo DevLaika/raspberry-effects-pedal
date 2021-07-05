@@ -2,8 +2,6 @@
 
 Chain::Chain(Effect *_effects[], int _length)
 {
-  // std::cout << "I am the Chain constructor\n"
-  //           << "The chain has a length of: " << _length << "\n";
 
   length = _length;
   for (uint8_t i = 0; i < _length; i++)
@@ -13,7 +11,6 @@ Chain::Chain(Effect *_effects[], int _length)
 };
 int Chain::eval(int input_signal)
 {
-  // std::cout << "The chain eval was triggered\n";
   if (enabled)
   {
     for (uint8_t i = 0; i < length; i++)

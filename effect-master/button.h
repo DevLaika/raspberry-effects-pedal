@@ -15,7 +15,7 @@ enum states
 class Button : public Object
 {
 public:
-  Button(Effect *targets[amt_states], std::string actions[amt_states]);
+  Button(std::function<void()> *actions[amt_states]);
   void eval();
   void act();
   bool pressed = false;
@@ -24,8 +24,7 @@ public:
 private:
   states state = idle;
   bool pressed_previous = false;
-  Effect *targets[amt_states];
-  std::string actions[amt_states];
+  std::function<void()> *actions[amt_states];
 };
 
 class ButtonFactory : public Factory

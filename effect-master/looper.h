@@ -2,6 +2,7 @@
 #define LOOPER_H
 
 #include "effect.h"
+#include <functional>
 
 #define MAX_RECORD_LENGTH 100000
 
@@ -11,8 +12,7 @@ public:
   int isRecording = 127;
   Looper();
   int eval(int input_signal);
-  void triggerAction(std::string action);
-  int *getPointerTo(std::string value);
+  void startstop();
   std::string serialize();
 
 private:

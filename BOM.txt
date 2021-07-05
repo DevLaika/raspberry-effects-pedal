@@ -1,0 +1,31 @@
+caps
+	non-polar
+		[o] 5 6n8F 682
+		[o] 1 270pF 271
+		[o] 3 100nF 104
+		[o] 1 470nF 474
+	polar
+		[o] 4 220uF
+		[o] 3 4u7F
+[o] 4 led !! headerpins
+[o] 2 jacks !! headerpins
+resistor
+	standard
+		[o] 2 1MOhm
+		[o] 7 4k7Ohm
+		[o] 2 100kOhm
+		[o] 1 300kOhm
+		[o] 1 50kOhm
+	variable
+		[o] 1 500kOhm
+		[o] 1 10kOhm // ? Brightness
+ic
+	[o] 1 MCP6002
+	[o] 1 MCP3202
+pi // What version? does it matter? !! headerpins
+[o] 2 switch Latching SPDT // Bass and software !! headerpins
+[o] 1 Rotary encoder !! headerpins
+[o] 4 Stomp buttons // Purely software !! headerpins
+[o] 1 switch Latching TPDT // FX Bypass !! headerpins
+[o] 1 button SPST // Back !! headerpins
+[o] apporopriate headerpins

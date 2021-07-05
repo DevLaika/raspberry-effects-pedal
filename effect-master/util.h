@@ -18,4 +18,4 @@ namespace pedalconfig
   std::vector<std::string> get_vector_of_values_by_head(std::string string, std::string key);
 }
 
-#endif // !UTIL
+#endif

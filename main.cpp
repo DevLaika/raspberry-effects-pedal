@@ -83,7 +83,6 @@ int main()
                 << "    | Is your SPI handle set up correctly?";
     }
     int input_signal = ((buf[1] & 0x0F) << 8) | buf[0];
-    std::cout << input_signal << std::endl;
     // PIGPIO : spiXfer(...)
 
     // int output_signal = pedal->effect->eval(input_signal);
@@ -115,9 +114,9 @@ int main()
 
     pedal->buttons[0]->pressed = true;
     pedal->buttons[0]->eval();
-    std::cout << pedal->interface->current->getDisplay() << std::endl;
-    pedal->interface->current->triggerAction("select");
-    std::cout << pedal->interface->current->getDisplay() << std::endl;
+    std::cout << pedal->interface->current->get() << std::endl;
+    pedal->interface->current->select();
+    std::cout << pedal->interface->current->get() << std::endl;
 
     in = 15;
     out = pedal->effect->eval(in);
